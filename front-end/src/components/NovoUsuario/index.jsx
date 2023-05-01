@@ -56,7 +56,7 @@ class NovoUsuario extends React.Component {
         }
 
         if(!primeiraVisaoCompleta) {
-            this.props.erro(mensagem);
+            this.props.error(mensagem);
         }
 
         this.setState({

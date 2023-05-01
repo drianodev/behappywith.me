@@ -10,8 +10,8 @@ class Toast extends React.Component {
     info(msg) {
         toast.info(msg)
     }
-    erro(msg) {
-        toast.erro(msg)
+    error(msg) {
+        toast.error(msg)
     }
 
     render() {
