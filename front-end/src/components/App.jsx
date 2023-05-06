@@ -2,15 +2,61 @@ import React from 'react';
 import Header from './Header';
 import NovoUsuario from './NovoUsuario';
 import Toast from './Toast';
+import Usuario from '../models/Usuario';
 
 class App extends React.Component {
+    constructor() {
+        super()
+        Usuario.obter(usuario => {            
+            this.state = {
+                usuario: usuario
+            };            
+        },() => {
+            this.state = {
+                usuario: undefined
+            };            
+        });
+    }
+
+    msgNovoUsuario(usuario) {
+        let genero = usuario.genero == 'm' ? 'o' : 'a';
+        this.refs.toast.sucess(
+            `Seja bem-vind${genero} ${usuario.nome}!`
+        )
+    }
+
+    renderizarNovoUsuario() {
+        let usuario = this.state.usuario;        
+        if (usuario) {
+            return (
+                <div style={{marginTop: '140px', textAlign: 'center'}}>
+                    <b>Usuário obtido do <i>localStorage</i></b><br />
+                    {usuario.toString()}
+                </div>
+            )
+        } else {
+            return (
+                <NovoUsuario
+                    onSubmit={usuario => {                        
+                        usuario.salvar(() => {
+                            this.setState({
+                                usuario: usuario
+                            }, () => {
+                                this.msgNovoUsuario(usuario)
+                            })                            
+                        });
+                    }}
+                    error={msg=>this.refs.toast.error(msg)}
+                />
+            )
+        }      
+    }
+
     render() {
         return (
             <div>
                 <Header />
-                <NovoUsuario
-                    error={msg => this.refs.toast.error(msg)}    
-                />
+                {this.renderizarNovoUsuario()}
                 <Toast ref="toast" />
             </div>
         );

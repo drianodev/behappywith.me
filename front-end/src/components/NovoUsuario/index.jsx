@@ -4,6 +4,8 @@ import Input from "../Input";
 import GenderSelector from '../GenderSelector';
 import Usuario from "../../models/Usuario";
 import Button from "../Button";
+import ImageScroller from "../ImageScroller";
+import Avatar from "../../models/Avatar";
 
 class NovoUsuario extends React.Component {
     constructor(props) {
@@ -31,6 +33,7 @@ class NovoUsuario extends React.Component {
         e.preventDefault();
         let usuario = this.state.usuario;
         usuario.genero = genero;
+        usuario.avatar = Avatar.obterTodos()[0];
         this.setState({
             usuario: usuario
         });
@@ -106,6 +109,33 @@ class NovoUsuario extends React.Component {
         }
     }
 
+    renderizarAvatar() {
+        if (this.state.primeiraVisaoCompleta) {    
+            return (
+                <section>
+                    <Label
+                        texto="Escolha seu avatar:"
+                    />
+                    <ImageScroller
+                        arquivo="img/avatars.png"
+                        eixoY={(this.state.usuario.genero == 'm' ? 0 : 1)}
+                        elementos={Avatar.obterTodos()}
+                        selecionado={this.state.usuario.avatar}
+                        onChange={avatar => {                            
+                            let usuario = this.state.usuario;
+                            usuario.avatar = avatar;
+                            this.setState({                                
+                                usuario: usuario                                
+                            });
+                        }}
+                    />
+                </section>
+            )
+        } else {
+            return null            
+        }
+    }
+
     renderizarBotoes() {
         if(this.state.primeiraVisaoCompleta) {
             return (
@@ -114,7 +144,10 @@ class NovoUsuario extends React.Component {
                         texto="Voltar"
                         onClick={e => {
                             e.preventDefault();
+                            let usuario = this.state.usuario;
+                            usuario.avatar = Avatar.obterTodos()[0];
                             this.setState({
+                                usuario: usuario,
                                 primeiraVisaoCompleta: false
                             });
                         }}
@@ -123,6 +156,10 @@ class NovoUsuario extends React.Component {
                     <Button
                         principal
                         texto="Salvar"
+                        onClick={e =>{
+                            e.preventDefault();
+                            this.props.onSubmit(this.state.usuario);
+                        }}
                     />
                 </section>
             )
@@ -145,6 +182,7 @@ class NovoUsuario extends React.Component {
                 <form className="pure-form pure-form-stacked">
                     {this.renderizarNome()}
                     {this.renderizarGenero()}
+                    {this.renderizarAvatar()}
                     {this.renderizarBotoes()}
                 </form>
             </div>

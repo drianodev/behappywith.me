@@ -43,7 +43,7 @@ class ImageScroller extends React.Component {
         )
     } 
 
-    redenrizarImagens() {
+    renderizarImagens() {
         const ms = this.state.manipularEvento.toqueEmExecucao ? '100ms' : '800ms'
 
         const estilo = {
@@ -61,7 +61,7 @@ class ImageScroller extends React.Component {
         }
 
         const lista = this.props.elementos.map(
-            (entry, index) => this.redenrizarImagem(entry, index)
+            (entry, index) => this.renderizarImagem(entry, index)
         );
 
         return (
